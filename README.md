@@ -7,7 +7,7 @@ It can be used to reproduce the simulation studies in the following paper:
 **Ye Fan, Jr-Shin Li and Nan Lin**. *Residual Projection for Quantile Regression in Vertically Partitioned Big Data.*
 
 ## Code for testing PIQR
-
+```
 ###function for generating the correlation matrix
 gcov = function(p, rho){
   cov = matrix(1, p, p);
@@ -35,3 +35,4 @@ X = matrix(rt(n*p, 3, ncp = 0), n, p)
 cov = gcov(p, rho)
 X = X%*%chol(cov)
 Xint = cbind(1, X)
+'''
