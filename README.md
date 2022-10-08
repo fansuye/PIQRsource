@@ -20,19 +20,29 @@ gcov = function(p, rho){
   cov
 }
 
-
+###generate the synthetic data (Student's t covariate and normal error)
 n = 10000
 p = 500
 rho = 0.5
+M = 20
+tau = 0.7
 epsM = 1e-03
 eps = 1e-02
 maxstep = 5000
-M = 20
 set.seed(66)
-beta0 = rnorm(1)
-beta = rnorm(p)
 X = matrix(rt(n*p, 3, ncp = 0), n, p)
 cov = gcov(p, rho)
 X = X%*%chol(cov)
 Xint = cbind(1, X)
+beta0 = rnorm(1)
+beta = rnorm(p)
+e = rnorm(n)
+Y = beta0+X%*%beta+e
+
+###test the PIQR function
+beta_true = c(beta0+qnorm(tau), beta)
+result_PIQR = PIQR(Xint, Y, M, tau, eps, epsM, maxstep)
+beta_PIQR = result_PIQR$beta
+AE_PIQR = sum(abs(beta_PIQR-beta_true))
+Iteration_PIQR = result_PIQR$iteration
 '''
