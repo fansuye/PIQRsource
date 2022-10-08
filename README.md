@@ -1,4 +1,6 @@
-# Source code for PIQR algorithm 
+# Source code for PIQR algorithm
+
+## Instructions
 
 It can be used to reproduce the simulation studies in the following paper:
 
