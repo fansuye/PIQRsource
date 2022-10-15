@@ -45,4 +45,9 @@ result_PIQR = PIQR(Xint, Y, M, tau, eps, epsM, maxstep)
 beta_PIQR = result_PIQR$beta
 AE_PIQR = sum(abs(beta_PIQR-beta_true))
 Iteration_PIQR = result_PIQR$iteration
+
+###output the results
+AE_PIQR
+Iteration_PIQR
+
 '''
