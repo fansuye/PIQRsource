@@ -9,62 +9,43 @@
 #' @param maxstep Maximum number of iterations allowed for the PIQR algorithm
 #' @return The coefficient estimation and the number of iterations
 #' @examples
-#' gcov = function(p, rho, type){
-#'   if(type == "exchangeable"){
-#'     cov = matrix(rho, p, p)
-#'     diag(cov) = rep(1, p)
-#'   }
-#'   else{
-#'     cov = diag(p)
+#' gcov = function(p, rho){
+#'   cov = matrix(1, p, p);
 #'     for(i in 1:p){
 #'       for(j in 1:p){
 #'         if(i < j) cov[i,j] = rho^{j-i}
 #'         else cov[i,j] = cov[j,i]
 #'       }
 #'     }
-#'   }
 #'   cov
 #' }
 #'
-#' N = 10000
-#' p = 100
-#' n = 10
-#' rep = rep(n, N)
-#' nsum = sum(rep)
-#' d = 0.75*p
-#' rho_X = 0.5
-#' rho_e = 0.5
-#' tau = 0.75
-#' set.seed(999)
-#' X = matrix(rnorm(nsum*p), nsum, p)
-#' cov_X = gcov(p, rho_X, "ar1")
-#' X = X%*%chol(cov_X)
-#' for(i in 1:d){
-#'   X[,i] = pnorm(X[,i])
-#' }
-#' set.seed(1000)
-#' e = matrix(rt(N*n, 3), N, n)
-#' cov_e = gcov(n, rho_e, "ar1")
-#' e = as.vector(t(e%*%chol(cov_e)))
-#' sigma = 0.5
-#' e = sigma*e
+#' n = 10000
+#' p = 500
+#' rho = 0.5
+#' M = 20
+#' tau = 0.7
+#' epsM = 1e-03
+#' eps = 1e-02
+#' maxstep = 5000
+#' set.seed(66)
+#' X = matrix(rt(n*p, 3, ncp = 0), n, p)
+#' cov = gcov(p, rho)
+#' X = X%*%chol(cov)
+#' Xint = cbind(1, X)
 #' beta0 = rnorm(1)
 #' beta = rnorm(p)
-#' Y = beta0+X%*%beta+apply(X[,1:d]*e/d, 1, sum)
-#' beta_true = c(beta0, quantile(e/d, tau)+beta[1:d], beta[(d+1):p])
-#'
-#' WQR = WQRADMM(X, Y, rep, tau, TRUE, "WQR")
-#' beta_WQR = WQR$Estimation_WQR
-#' AE_WQR = sum(abs(beta_WQR-beta_true))
-#' Time_WQR = WQR$Time_WQR
-#' Time_WQRADMM = WQR$Time_total
+#' e = rnorm(n)
+#' Y = beta0+X%*%beta+e
+#' 
+#' beta_true = c(beta0+qnorm(tau), beta)
+#' result_PIQR = PIQR(Xint, Y, M, tau, eps, epsM, maxstep)
+#' beta_PIQR = result_PIQR$beta
+#' AE_PIQR = sum(abs(beta_PIQR-beta_true))
+#' Iteration_PIQR = result_PIQR$iteration
 #' @export
 #'
 
-
-
-install.packages("quantreg")
-library(quantreg)
 
 PIQR = function(X, Y, M, tau, eps, epsm, maxstep){
   
