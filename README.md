@@ -8,6 +8,9 @@ It can be used to reproduce the simulation studies in the following paper:
 
 ## Code for testing PIQR
 ```
+install.packages("quantreg")
+library(quantreg)
+
 ###function for generating the correlation matrix
 gcov = function(p, rho){
   cov = matrix(1, p, p);
