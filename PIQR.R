@@ -46,6 +46,8 @@
 #' @export
 #'
 
+install.packages("quantreg")
+library(quantreg)
 
 PIQR = function(X, Y, M, tau, eps, epsm, maxstep){
   
